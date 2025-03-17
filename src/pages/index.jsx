@@ -1,8 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Head from "next/head"
-import imag1 from "../../public/image1.webp"
+import { useState } from "react";
+import Head from "next/head";
+import imag1 from "../../public/image1.webp";
+import player1 from "../../public/player-images/Avatar wallpaper.jpg";
+
+function importAll(r) {
+  return r.keys().map(r);
+}
+
+const images = importAll(
+  require.context(
+    "../../public/player-images",
+    false,
+    /\.(png|jpe?g|svg|webp)$/
+  )
+);
 
 export default function Home() {
   // Create an array of 30 players
@@ -10,40 +23,57 @@ export default function Home() {
     Array.from({ length: 30 }, (_, i) => ({
       id: i + 1,
       eliminated: false,
-    })),
-  )
+      image: images[i % images.length].default.src,
+    }))
+  );
 
-  const [inputValue, setInputValue] = useState("")
-  const [error, setError] = useState("")
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleEliminate = () => {
-    const id = Number.parseInt(inputValue)
+    const id = Number.parseInt(inputValue);
 
     if (isNaN(id) || id < 1 || id > 30) {
-      setError("Please enter a valid number between 1 and 30")
-      return
+      setError("Please enter a valid number between 1 and 30");
+      return;
     }
+    const eleminatedPlayer = players.find((player) => player.id === id);
+    if (eleminatedPlayer.eliminated) {
+      setError(`Player ${eleminatedPlayer.id} is already eleminated`);
+      return;
+    }
+    setPlayers(
+      players.map((player) =>
+        player.id === id ? { ...player, eliminated: true } : player
+      )
+    );
+    setInputValue("");
+    setSuccessMessage(`Player ${id} eliminated.`);
 
-    setError("")
-    setPlayers(players.map((player) => (player.id === id ? { ...player, eliminated: true } : player)))
-    setInputValue("")
-  }
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 2000);
+  };
 
   // Format ID to have leading zeros (e.g., 001, 002, etc.)
   const formatId = (id) => {
-    return id.toString().padStart(3, "0")
-  }
+    return id.toString().padStart(3, "0");
+  };
 
   // Utility function to conditionally join class names
   const cn = (...classes) => {
-    return classes.filter(Boolean).join(" ")
-  }
+    return classes.filter(Boolean).join(" ");
+  };
 
   return (
     <div>
       <Head>
         <title>Squid Game Player Grid</title>
-        <meta name="description" content="A Squid Game inspired player grid with elimination functionality" />
+        <meta
+          name="description"
+          content="A Squid Game inspired player grid with elimination functionality"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -55,7 +85,7 @@ export default function Home() {
           padding: "1rem",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto"  }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h1
             style={{
               fontSize: "2.5rem",
@@ -67,9 +97,28 @@ export default function Home() {
           >
             SQUID GAME
           </h1>
-
+          {successMessage && (
+            <div
+              style={{
+                backgroundColor: "#4ade80",
+                color: "black",
+                padding: "0.5rem 1rem",
+                borderRadius: "0.375rem",
+                textAlign: "center",
+                marginBottom: "1rem",
+              }}
+            >
+              {successMessage}
+            </div>
+          )}
           {/* Control Panel */}
-          <div style={{ marginBottom: "2rem", maxWidth: "500px", margin: "0 auto" }}>
+          <div
+            style={{
+              marginBottom: "2rem",
+              maxWidth: "500px",
+              margin: "0 auto",
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -97,7 +146,17 @@ export default function Home() {
                     color: "white",
                   }}
                 />
-                {error && <p style={{ color: "#ef4444", fontSize: "0.875rem", marginTop: "0.25rem" }}>{error}</p>}
+                {error && (
+                  <p
+                    style={{
+                      color: "#ef4444",
+                      fontSize: "0.875rem",
+                      marginTop: "0.25rem",
+                    }}
+                  >
+                    {error}
+                  </p>
+                )}
               </div>
               <button
                 onClick={handleEliminate}
@@ -109,8 +168,12 @@ export default function Home() {
                   transition: "background-color 0.2s",
                   cursor: "pointer",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#cc0063")}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e5006f")}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#cc0063")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#e5006f")
+                }
               >
                 Eliminate
               </button>
@@ -127,7 +190,7 @@ export default function Home() {
               padding: "2px",
               maxWidth: "1100px",
               margin: "0 auto",
-              marginTop:"30px",
+              marginTop: "30px",
               "@media (min-width: 640px)": {
                 gridTemplateColumns: "repeat(3, 1fr)",
               },
@@ -148,6 +211,7 @@ export default function Home() {
                   transition: "all 1s",
                   opacity: player.eliminated ? 0.2 : 1,
                   transform: player.eliminated ? "scale(0.95)" : "scale(1)",
+                  margin:10
                 }}
               >
                 <div
@@ -157,13 +221,14 @@ export default function Home() {
                     left: 0,
                     width: "100%",
                     height: "100%",
-                    clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                    clipPath:
+                      "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                     backgroundColor: "#ff0080",
                     overflow: "hidden",
                   }}
                 >
                   <img
-                    src={imag1.src || "/placeholder.svg"}
+                    src={player.image || "/image1.webp"}
                     alt={`Player ${player.id}`}
                     style={{
                       width: "100%",
@@ -179,7 +244,8 @@ export default function Home() {
                       left: "0",
                       right: "0",
                       height: "30%",
-                      background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
                       display: "flex",
                       alignItems: "flex-end",
                       justifyContent: "center",
@@ -195,7 +261,8 @@ export default function Home() {
                         textShadow: "0 0 5px rgba(74, 222, 128, 0.7)",
                       }}
                     >
-                      {formatId(player.id)}
+                      {/* {formatId(player.id)} */}
+                      {player.id}
                     </span>
                   </div>
                 </div>
@@ -208,13 +275,13 @@ export default function Home() {
       {/* Digital font style */}
       <style jsx global>{`
         @font-face {
-          font-family: 'Digital-7';
-          src: url('https://fonts.cdnfonts.com/css/digital-7-mono') format('woff2');
+          font-family: "Digital-7";
+          src: url("https://fonts.cdnfonts.com/css/digital-7-mono")
+            format("woff2");
           font-weight: normal;
           font-style: normal;
         }
       `}</style>
     </div>
-  )
+  );
 }
-
