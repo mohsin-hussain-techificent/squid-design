@@ -6,25 +6,24 @@ import imag1 from "../../public/image1.webp";
 // import player1 from "../../public/player-images/Avatar wallpaper.jpg";
 import { useSlot } from "../context/SlotContext";
 // const [slotNumber] = useSlot();
-
-function importAll(r) {
+function importAll(r)
+{
   return r.keys().map(r);
 }
 
 const images = importAll(
-  require.context(
-    "../../public/player-images",
-    false,
-    /\.(png|jpe?g|svg|webp)$/
-  )
+  require.context("../../public/player-images", false, /.*/)
 );
 
-export default function Home() {
+console.log("imagesimages" , images);
+export default function Home()
+{
   // Create an array of 30 players
 
   const { slotNumber } = useSlot();
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     handleEliminate(parseInt(slotNumber));
   }, [slotNumber]);
 
@@ -41,13 +40,16 @@ export default function Home() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleEliminate = (id) => {
-    if (isNaN(id) || id < 1 || id > 30) {
+  const handleEliminate = (id) =>
+  {
+    if (isNaN(id) || id < 1 || id > 30)
+    {
       setError("Please enter a valid number between 1 and 30");
       return;
     }
     const eleminatedPlayer = players.find((player) => player.id === id);
-    if (eleminatedPlayer.eliminated) {
+    if (eleminatedPlayer.eliminated)
+    {
       setError(`Player ${eleminatedPlayer.id} is already eleminated`);
       return;
     }
@@ -59,18 +61,21 @@ export default function Home() {
     setInputValue("");
     setSuccessMessage(`Player ${id} eliminated.`);
 
-    setTimeout(() => {
+    setTimeout(() =>
+    {
       setSuccessMessage("");
     }, 2000);
   };
 
   // Format ID to have leading zeros (e.g., 001, 002, etc.)
-  const formatId = (id) => {
+  const formatId = (id) =>
+  {
     return id.toString().padStart(3, "0");
   };
 
   // Utility function to conditionally join class names
-  const cn = (...classes) => {
+  const cn = (...classes) =>
+  {
     return classes.filter(Boolean).join(" ");
   };
 
@@ -253,7 +258,7 @@ export default function Home() {
                     }}
                   ></div>
                   <img
-                    src={player.image || "/image1.webp"}
+                    src={player.image || player.image.src || "/image1.webp"}
                     alt={`Player ${player.id}`}
                     style={{
                       width: "100%",
