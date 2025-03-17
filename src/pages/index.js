@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import imag1 from "../../public/image1.webp";
 import player1 from "../../public/player-images/Avatar wallpaper.jpg";
-import { useSlot } from "../context/SlotContext"
+import { useSlot } from "../context/SlotContext";
 // const [slotNumber] = useSlot();
 
-function importAll(r)
-{
+function importAll(r) {
   return r.keys().map(r);
 }
 
@@ -20,16 +19,14 @@ const images = importAll(
   )
 );
 
-export default function Home()
-{
+export default function Home() {
   // Create an array of 30 players
 
   const { slotNumber } = useSlot();
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleEliminate(parseInt(slotNumber));
-  }, [slotNumber])
+  }, [slotNumber]);
 
   console.log("slotNumberslotNumber", slotNumber);
 
@@ -44,17 +41,13 @@ export default function Home()
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleEliminate = (id) =>
-  {
-
-    if (isNaN(id) || id < 1 || id > 30)
-    {
+  const handleEliminate = (id) => {
+    if (isNaN(id) || id < 1 || id > 30) {
       setError("Please enter a valid number between 1 and 30");
       return;
     }
     const eleminatedPlayer = players.find((player) => player.id === id);
-    if (eleminatedPlayer.eliminated)
-    {
+    if (eleminatedPlayer.eliminated) {
       setError(`Player ${eleminatedPlayer.id} is already eleminated`);
       return;
     }
@@ -66,21 +59,18 @@ export default function Home()
     setInputValue("");
     setSuccessMessage(`Player ${id} eliminated.`);
 
-    setTimeout(() =>
-    {
+    setTimeout(() => {
       setSuccessMessage("");
     }, 2000);
   };
 
   // Format ID to have leading zeros (e.g., 001, 002, etc.)
-  const formatId = (id) =>
-  {
+  const formatId = (id) => {
     return id.toString().padStart(3, "0");
   };
 
   // Utility function to conditionally join class names
-  const cn = (...classes) =>
-  {
+  const cn = (...classes) => {
     return classes.filter(Boolean).join(" ");
   };
 
@@ -105,7 +95,7 @@ export default function Home()
           padding: "1rem",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ margin: "0 auto" }}>
           <h1
             style={{
               fontSize: "2.5rem",
@@ -115,7 +105,7 @@ export default function Home()
               color: "#ff0080",
             }}
           >
-            SQUID GAME
+            TECHI SQUID GAME
           </h1>
           {/* {successMessage && (
             <div
@@ -204,11 +194,11 @@ export default function Home()
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(10, 1fr)",
+              gridTemplateColumns: "repeat(8, 1fr)",
               gap: "2px",
               backgroundColor: "black",
               padding: "2px",
-              maxWidth: "1100px",
+              // maxWidth: "1100px",
               margin: "0 auto",
               marginTop: "30px",
               "@media (min-width: 640px)": {
