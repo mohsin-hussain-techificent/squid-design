@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import imag1 from "../../public/image1.webp";
-import player1 from "../../public/player-images/Avatar wallpaper.jpg";
+// import player1 from "../../public/player-images/Avatar wallpaper.jpg";
 import { useSlot } from "../context/SlotContext";
 // const [slotNumber] = useSlot();
 
@@ -31,7 +31,7 @@ export default function Home() {
   console.log("slotNumberslotNumber", slotNumber);
 
   const [players, setPlayers] = useState(
-    Array.from({ length: 30 }, (_, i) => ({
+    Array.from({ length: 29 }, (_, i) => ({
       id: i + 1,
       eliminated: false,
       image: images[i % images.length].default.src,
@@ -194,7 +194,7 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(8, 1fr)",
+              gridTemplateColumns: "repeat(10, 1fr)",
               gap: "2px",
               backgroundColor: "black",
               padding: "2px",
@@ -219,7 +219,7 @@ export default function Home() {
                   position: "relative",
                   aspectRatio: "1/1",
                   transition: "all 1s",
-                  opacity: player.eliminated ? 0.2 : 1,
+                  opacity: player.eliminated ? 0.1 : 1,
                   transform: player.eliminated ? "scale(0.95)" : "scale(1)",
                   margin: 10,
                 }}

@@ -15,7 +15,7 @@ const Admin = () => {
 
   const handleSubmit = () => {
     const number = parseInt(inputNumber, 10);
-    if (isNaN(number) || number < 1 || number > 30) {
+    if (isNaN(number) || number < 1 || number > 29) {
       setMessage("Please enter a number between 1 and 30");
       return;
     }
@@ -34,7 +34,7 @@ const Admin = () => {
           type="text"
           value={inputNumber}
           onChange={handleInputChange}
-          inputProps={{ min: 1, max: 30 }}
+          inputProps={{ min: 1, max: 29 }}
           error={!!message && !message.includes("successfully")}
           helperText={message || "Enter a number between 1 and 30"}
           sx={{ mb: 2 }}
