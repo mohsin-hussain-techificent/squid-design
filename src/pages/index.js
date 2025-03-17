@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import imag1 from "../../public/image1.webp";
-// import player1 from "../../public/player-images/Avatar wallpaper.jpg";
 import { useSlot } from "../context/SlotContext";
-// const [slotNumber] = useSlot();
 
 function importAll(r) {
   return r.keys().map(r);
@@ -20,15 +18,8 @@ const images = importAll(
 );
 
 export default function Home() {
-  // Create an array of 30 players
-
-  const { slotNumber } = useSlot();
-
-  useEffect(() => {
-    handleEliminate(parseInt(slotNumber));
-  }, [slotNumber]);
-
-  console.log("slotNumberslotNumber", slotNumber);
+  // Create an array of 29 players
+  const { eliminatedPlayers, isPlayerEliminated } = useSlot();
 
   const [players, setPlayers] = useState(
     Array.from({ length: 29 }, (_, i) => ({
@@ -37,32 +28,17 @@ export default function Home() {
       image: images[i % images.length].default.src,
     }))
   );
-  const [inputValue, setInputValue] = useState();
-  const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleEliminate = (id) => {
-    if (isNaN(id) || id < 1 || id > 30) {
-      setError("Please enter a valid number between 1 and 30");
-      return;
-    }
-    const eleminatedPlayer = players.find((player) => player.id === id);
-    if (eleminatedPlayer.eliminated) {
-      setError(`Player ${eleminatedPlayer.id} is already eleminated`);
-      return;
-    }
-    setPlayers(
-      players.map((player) =>
-        player.id === id ? { ...player, eliminated: true } : player
-      )
+  // Update players when eliminatedPlayers changes
+  useEffect(() => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        eliminated: isPlayerEliminated(player.id),
+      }))
     );
-    setInputValue("");
-    setSuccessMessage(`Player ${id} eliminated.`);
-
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 2000);
-  };
+  }, [eliminatedPlayers, isPlayerEliminated]);
 
   // Format ID to have leading zeros (e.g., 001, 002, etc.)
   const formatId = (id) => {
@@ -84,8 +60,6 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {/* {console.log("number:",slotNumber)} */}
-      {console.log("input number:", inputValue)}
 
       <main
         style={{
@@ -107,88 +81,6 @@ export default function Home() {
           >
             TECHI SQUID GAME
           </h1>
-          {/* {successMessage && (
-            <div
-              style={{
-                backgroundColor: "#4ade80",
-                color: "black",
-                padding: "0.5rem 1rem",
-                borderRadius: "0.375rem",
-                textAlign: "center",
-                marginBottom: "1rem",
-              }}
-            >
-              {successMessage}
-            </div>
-          )} */}
-          {/* Control Panel */}
-          {/* <div
-            style={{
-              marginBottom: "2rem",
-              maxWidth: "500px",
-              margin: "0 auto",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                "@media (min-width: 640px)": {
-                  flexDirection: "row",
-                },
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <input
-                  type="number"
-                  min="1"
-                  max="30"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter player ID (1-30)"
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "0.375rem",
-                    backgroundColor: "#1f2937",
-                    border: "1px solid #374151",
-                    color: "white",
-                  }}
-                />
-                {error && (
-                  <p
-                    style={{
-                      color: "#ef4444",
-                      fontSize: "0.875rem",
-                      marginTop: "0.25rem",
-                    }}
-                  >
-                    {error}
-                  </p>
-                )}
-              </div>
-              <button
-                onClick={handleEliminate}
-                style={{
-                  padding: "0.5rem 1rem",
-                  borderRadius: "0.375rem",
-                  backgroundColor: "#e5006f",
-                  color: "white",
-                  transition: "background-color 0.2s",
-                  cursor: "pointer",
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#cc0063")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#e5006f")
-                }
-              >
-                Eliminate
-              </button>
-            </div>
-          </div> */}
 
           {/* Player Grid */}
           <div
@@ -198,7 +90,6 @@ export default function Home() {
               gap: "2px",
               backgroundColor: "black",
               padding: "2px",
-              // maxWidth: "1100px",
               margin: "0 auto",
               marginTop: "30px",
               "@media (min-width: 640px)": {
@@ -286,7 +177,6 @@ export default function Home() {
                         textShadow: "0 0 5px rgba(74, 222, 128, 0.7)",
                       }}
                     >
-                      {/* {formatId(player.id)} */}
                       {player.id}
                     </span>
                   </div>
