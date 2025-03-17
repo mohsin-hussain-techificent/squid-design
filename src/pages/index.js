@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import imag1 from "../../public/image1.webp";
 import player1 from "../../public/player-images/Avatar wallpaper.jpg";
+import { useSlot } from "../context/SlotContext"
+// const [slotNumber] = useSlot();
 
-function importAll(r) {
+function importAll(r)
+{
   return r.keys().map(r);
 }
 
@@ -17,8 +20,19 @@ const images = importAll(
   )
 );
 
-export default function Home() {
+export default function Home()
+{
   // Create an array of 30 players
+
+  const { slotNumber } = useSlot();
+
+  useEffect(() =>
+  {
+    handleEliminate(parseInt(slotNumber));
+  }, [slotNumber])
+
+  console.log("slotNumberslotNumber", slotNumber);
+
   const [players, setPlayers] = useState(
     Array.from({ length: 30 }, (_, i) => ({
       id: i + 1,
@@ -26,20 +40,21 @@ export default function Home() {
       image: images[i % images.length].default.src,
     }))
   );
-
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState();
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleEliminate = () => {
-    const id = Number.parseInt(inputValue);
+  const handleEliminate = (id) =>
+  {
 
-    if (isNaN(id) || id < 1 || id > 30) {
+    if (isNaN(id) || id < 1 || id > 30)
+    {
       setError("Please enter a valid number between 1 and 30");
       return;
     }
     const eleminatedPlayer = players.find((player) => player.id === id);
-    if (eleminatedPlayer.eliminated) {
+    if (eleminatedPlayer.eliminated)
+    {
       setError(`Player ${eleminatedPlayer.id} is already eleminated`);
       return;
     }
@@ -51,18 +66,21 @@ export default function Home() {
     setInputValue("");
     setSuccessMessage(`Player ${id} eliminated.`);
 
-    setTimeout(() => {
+    setTimeout(() =>
+    {
       setSuccessMessage("");
     }, 2000);
   };
 
   // Format ID to have leading zeros (e.g., 001, 002, etc.)
-  const formatId = (id) => {
+  const formatId = (id) =>
+  {
     return id.toString().padStart(3, "0");
   };
 
   // Utility function to conditionally join class names
-  const cn = (...classes) => {
+  const cn = (...classes) =>
+  {
     return classes.filter(Boolean).join(" ");
   };
 
@@ -76,6 +94,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {/* {console.log("number:",slotNumber)} */}
+      {console.log("input number:", inputValue)}
 
       <main
         style={{
@@ -97,7 +117,7 @@ export default function Home() {
           >
             SQUID GAME
           </h1>
-          {successMessage && (
+          {/* {successMessage && (
             <div
               style={{
                 backgroundColor: "#4ade80",
@@ -110,9 +130,9 @@ export default function Home() {
             >
               {successMessage}
             </div>
-          )}
+          )} */}
           {/* Control Panel */}
-          <div
+          {/* <div
             style={{
               marginBottom: "2rem",
               maxWidth: "500px",
@@ -178,13 +198,13 @@ export default function Home() {
                 Eliminate
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* Player Grid */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(10, 1fr)",
               gap: "2px",
               backgroundColor: "black",
               padding: "2px",
