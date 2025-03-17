@@ -211,7 +211,7 @@ export default function Home() {
                   transition: "all 1s",
                   opacity: player.eliminated ? 0.2 : 1,
                   transform: player.eliminated ? "scale(0.95)" : "scale(1)",
-                  margin:10
+                  margin: 10,
                 }}
               >
                 <div
@@ -227,6 +227,21 @@ export default function Home() {
                     overflow: "hidden",
                   }}
                 >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      clipPath:
+                        "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                      boxShadow:
+                        "0 0 10px #ff0066, 0 0 20px #ff0066, 0 0 30px #ff0066, 0 0 40px #ff0066",
+                      filter: "blur(5px)",
+                      zIndex: 1,
+                    }}
+                  ></div>
                   <img
                     src={player.image || "/image1.webp"}
                     alt={`Player ${player.id}`}
